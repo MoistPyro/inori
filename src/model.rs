@@ -1,6 +1,8 @@
 extern crate mpd;
+use mpd::client::StreamTypes;
 use mpd::error::Result;
-use mpd::{Client, Song, Status};
+use mpd::idle::IdleClient;
+use mpd::{Client, Song, Status, Subsystem};
 use nucleo_matcher::{Matcher, Utf32String};
 use ratatui::crossterm::event::KeyEvent;
 use ratatui::widgets::*;
@@ -104,7 +106,8 @@ pub struct QueueSelector {
 pub struct Model {
     pub state: State,
     pub status: Status,
-    pub conn: Client<mpd::client::StreamTypes>,
+    pub conn: Client<StreamTypes>,
+    pub idle_conn: IdleClient<StreamTypes>,
     pub screen: Screen,
     pub library: LibraryState,
     pub queue: QueueSelector,
@@ -118,15 +121,20 @@ pub struct Model {
 impl Model {
     pub fn new() -> Result<Self> {
         let config = Config::default().try_read_config();
-        let mut conn = if let Some(mpd_url) = &config.mpd_address {
-            Client::<mpd::client::StreamTypes>::connect(mpd_url).unwrap()
-        } else {
-            Client::<mpd::client::StreamTypes>::default()
-        };
+        let mut conn = Self::make_connection(&config);
+        let idle_conn = IdleClient::new(
+            Self::make_connection(&config),
+            &[
+                Subsystem::Database,
+                Subsystem::Player,
+                Subsystem::Options
+            ]
+        )?;
         Ok(Model {
             state: State::Running,
             status: conn.status()?,
             conn,
+            idle_conn,
             screen: Screen::Library,
             library: LibraryState::new(),
             queue: QueueSelector::new(),
@@ -141,6 +149,15 @@ impl Model {
             window_height: Some(100),
         })
     }
+
+    pub fn make_connection(conf: &Config) -> Client<StreamTypes> {
+        if let Some(mpd_url) = &conf.mpd_address {
+            Client::<StreamTypes>::connect(mpd_url).unwrap()
+        } else {
+            Client::<StreamTypes>::default()
+        }
+    }
+
     pub fn update_status(&mut self) -> Result<()> {
         self.status = self.conn.status()?;
         Ok(())

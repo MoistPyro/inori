@@ -1,3 +1,4 @@
+use mpd::Subsystem;
 use crate::config::keybind::{KeybindMap, KeybindTarget};
 use crate::event_handler::Result;
 use crate::model::proto::Searchable;
@@ -20,6 +21,7 @@ bitflags! {
         const STATUS = 0b00000100;
         const CURRENT_SONG = 0b00001000;
         const START_PLAYING = 0b00010000;
+        const IDLE_UPDATES = 0b00100000;
     }
 }
 
@@ -90,7 +92,16 @@ pub fn update_tick(model: &mut Model) -> Result<()> {
     Ok(())
 }
 
-pub fn update_screens(model: &mut Model, update: Update) -> Result<()> {
+pub fn update_screens(model: &mut Model, mut update: Update) -> Result<()> {
+    if update.contains(Update::IDLE_UPDATES) {
+        let changes = model.idle_conn.get()?;
+        if changes.contains(&Subsystem::Database) {
+            build_library::build_library(model)?;
+        }
+        if changes.contains(&Subsystem::Update) || changes.contains(&Subsystem::Options) {
+            update |= Update::STATUS;
+        }
+    }
     if update.contains(Update::QUEUE) {
         model.queue.contents = model.conn.queue().unwrap_or_default();
     }

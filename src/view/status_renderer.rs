@@ -40,7 +40,7 @@ pub fn render_status(
                     .centered()
                     .set_style(theme.status_title),
                 ),
-                Cell::from("⎡r z s c⎤"),
+                Cell::from(Line::from("⎡r z s c⎤").right_aligned()),
             ]),
             Row::new(vec![
                 Cell::from(match model.status.state {
@@ -69,16 +69,19 @@ pub fn render_status(
                     }
                     .centered(),
                 ),
-                Cell::from(format!(
-                    "⎣{} {} {} {}⎦",
-                    format_status(model.status.repeat),
-                    format_status(model.status.random),
-                    format_status(model.status.single),
-                    format_status(model.status.consume)
-                )),
+                Cell::from(
+                    Line::from(format!(
+                        "⎣{} {} {} {}⎦",
+                        format_status(model.status.repeat),
+                        format_status(model.status.random),
+                        format_status(model.status.single),
+                        format_status(model.status.consume)
+                    ))
+                    .right_aligned(),
+                ),
             ]),
         ],
-        vec![Max(20), Min(10), Max(10)],
+        vec![Max(20), Min(10), Max(20)],
     )
     .block(Block::bordered().border_type(BorderType::Rounded));
     frame.render_widget(w, area);

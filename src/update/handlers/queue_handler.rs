@@ -24,10 +24,10 @@ pub fn handle_queue(model: &mut Model, msg: Message) -> Result<Update> {
                 if let Some(p) = model.queue.selected() {
                     let to = match d {
                         Horizontal::Left => {
-                            safe_increment(p, model.queue.len())
+                            safe_decrement(p, model.queue.len())
                         }
                         Horizontal::Right => {
-                            safe_decrement(p, model.queue.len())
+                            safe_increment(p, model.queue.len())
                         }
                     };
                     model.conn.swap(p as u32, to as u32)?;

@@ -34,13 +34,16 @@ Client for the Music Player Daemon ([MPD](https://www.musicpd.org/)).
 
 ## Installation & Usage
 
-Inori is on crates.io: `cargo install inori`.
+Inori is on [crates.io](https://crates.io/crates/inori): `cargo install inori`.
 
 Inori is also available on:
 
-- AUR as [inori](https://aur.archlinux.org/packages/inori) [maintainer: @eshrh].
-- Nixpkgs (unstable) as [inori](https://github.com/NixOS/nixpkgs/blob/nixos-unstable/pkgs/by-name/in/inori/package.nix) [maintainers: @stephen-huan, @eshrh],
-  with a home-manager (unstable) module [`programs.inori`](https://github.com/nix-community/home-manager/blob/master/modules/programs/inori.nix) [maintainer: @miku4k]
+- AUR as [inori](https://aur.archlinux.org/packages/inori)
+  [maintainer: [@eshrh](https://aur.archlinux.org/account/esrh)]
+- Nixpkgs as [inori](https://github.com/NixOS/nixpkgs/blob/nixos-unstable/pkgs/by-name/in/inori/package.nix)
+  [maintainers: [@stephen-huan](https://github.com/stephen-huan), [@eshrh](https://github.com/eshrh)]
+  - home-manager module [`programs.inori`](https://github.com/nix-community/home-manager/blob/master/modules/programs/inori.nix)
+    [maintainers: [@miku4k](https://github.com/miku4k), [@stephen-huan](https://github.com/stephen-huan)]
 
 See [configuration.md](./CONFIGURATION.md) for config options, as well
 as a full list of all default keybindings.

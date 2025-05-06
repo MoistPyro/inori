@@ -45,7 +45,6 @@ impl Theme {
             slash_span: Style::new().fg(LightMagenta),
             search_query_active: Style::new().bg(White).fg(Black),
             search_query_inactive: Style::new().bg(DarkGray).fg(Black),
-
             progress_bar_filled: Style::default()
                 .fg(LightYellow)
                 .bg(Black)

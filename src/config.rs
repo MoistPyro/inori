@@ -104,34 +104,34 @@ impl Config {
                     self.theme.status_title = deserialize_style(t);
                 }
                 ("artist_sort", Value::Table(t)) => {
-                    self.theme.artist_sort = deserialize_style(t);
+                    self.theme.field_artistsort = deserialize_style(t);
                 }
                 ("field_artistsort", Value::Table(t)) => {
-                    self.theme.artist_sort = deserialize_style(t);
+                    self.theme.field_artistsort = deserialize_style(t);
                 }
                 ("album", Value::Table(t)) => {
-                    self.theme.album = deserialize_style(t);
+                    self.theme.field_album = deserialize_style(t);
                 }
                 ("field_album", Value::Table(t)) => {
-                    self.theme.album = deserialize_style(t);
+                    self.theme.field_album = deserialize_style(t);
                 }
                 ("playing", Value::Table(t)) => {
-                    self.theme.playing = deserialize_style(t);
+                    self.theme.status_playing = deserialize_style(t);
                 }
                 ("paused", Value::Table(t)) => {
-                    self.theme.paused = deserialize_style(t);
+                    self.theme.status_paused = deserialize_style(t);
                 }
                 ("stopped", Value::Table(t)) => {
-                    self.theme.stopped = deserialize_style(t);
+                    self.theme.status_stopped = deserialize_style(t);
                 }
                 ("status_playing", Value::Table(t)) => {
-                    self.theme.playing = deserialize_style(t);
+                    self.theme.status_playing = deserialize_style(t);
                 }
                 ("status_paused", Value::Table(t)) => {
-                    self.theme.paused = deserialize_style(t);
+                    self.theme.status_paused = deserialize_style(t);
                 }
                 ("status_stopped", Value::Table(t)) => {
-                    self.theme.stopped = deserialize_style(t);
+                    self.theme.status_stopped = deserialize_style(t);
                 }
                 ("slash_span", Value::Table(t)) => {
                     self.theme.slash_span = deserialize_style(t);

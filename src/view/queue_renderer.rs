@@ -40,7 +40,7 @@ pub fn make_queue<'a>(model: &mut Model, theme: &Theme) -> Table<'a> {
                             .cloned()
                             .unwrap_or("Unknown Album".into()),
                     )
-                    .style(theme.album)
+                    .style(theme.field_album)
                     .left_aligned(),
                 ),
                 Cell::from(

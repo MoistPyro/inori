@@ -34,7 +34,7 @@ fn itemref_to_row<'a>(
                 Line::from(album_line),
                 Line::from(format_time(a.total_time())).right_aligned(),
             ])
-            .style(theme.album)
+            .style(theme.field_album)
         }
         ItemRef::Song(s) => {
             let mut track_line = vec![Span::from(str::repeat(" ", 3))];

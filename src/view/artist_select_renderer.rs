@@ -22,7 +22,7 @@ pub fn render_str_with_idxs<'a>(
                 Span::from(c.to_string())
             }
             .patch_style(if i >= len {
-                theme.artist_sort
+                theme.field_artistsort
             } else {
                 Style::default()
             })

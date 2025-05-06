@@ -26,7 +26,7 @@ pub fn render_search_item<'a>(
             let len = artist_sort.chars().count();
             cur += 1; // for spc
             for item in out.iter_mut().take(cur + len + 2).skip(cur) {
-                item.style = theme.artist_sort;
+                item.style = theme.field_artistsort;
             }
             cur += len + 2;
         }
@@ -36,7 +36,7 @@ pub fn render_search_item<'a>(
         out[cur].style = theme.slash_span;
         cur += 1;
         for item in out.iter_mut().skip(cur).take(len) {
-            item.style = theme.album;
+            item.style = theme.field_album;
         }
         cur += len;
     }

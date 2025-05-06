@@ -44,9 +44,9 @@ pub fn render_status(
             ]),
             Row::new(vec![
                 Cell::from(match model.status.state {
-                    Play => Text::from("[playing]").style(theme.playing),
-                    Pause => Text::from("[paused]").style(theme.paused),
-                    Stop => Text::from("[stopped]").style(theme.stopped),
+                    Play => Text::from("[playing]").style(theme.status_playing),
+                    Pause => Text::from("[paused]").style(theme.status_paused),
+                    Stop => Text::from("[stopped]").style(theme.status_stopped),
                 }),
                 Cell::from(
                     match &model.currentsong {

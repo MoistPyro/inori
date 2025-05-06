@@ -137,8 +137,8 @@ Colors should be specified in a table called "theme", like this:
 [theme.item_to_color]
 fg = "<COLOR>"
 bg = "<COLOR>"
-add_modifier = "<MODIFIERS>"
-sub_modifier = "<MODIFIERS>"
+add_modifier = ["<MODIFIER>"]
+sub_modifier = ["<MODIFIER>"]
 ```
 
 All fields are optional. `<COLOR>` should be one of
@@ -147,8 +147,7 @@ All fields are optional. `<COLOR>` should be one of
 - [ansi escape index](https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit): `9`
 - ansi color code: `White`, `Red`, `LightCyan`, etc
 
-`<MODIFIERS>` should be modifiers joined by "|"
-characters. The available modifiers are
+`<MODIFIER>` should be one of:
 
 - BOLD
 - DIM
@@ -160,7 +159,7 @@ characters. The available modifiers are
 - HIDDEN
 - CROSSED_OUT
 
-For example, you might write `add_modifier = "BOLD | ITALIC"`.
+For example, you might write `add_modifier = ["BOLD", "ITALIC"]`.
 
 Here is the full list of styles available for customization:
 

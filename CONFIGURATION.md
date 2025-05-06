@@ -165,18 +165,18 @@ For example, you might write `add_modifier = "BOLD | ITALIC"`.
 Here is the full list of styles available for customization:
 
 | Name                      | Explanation                                    |
-| ------------------------- | ---------------------------------------------- |
+|---------------------------|------------------------------------------------|
 | `item_highlight_active`   | selected item in an active list                |
 | `item_highlight_inactive` | selected item in an inactive list              |
 | `block_active`            | active block border style                      |
 | `status_artist`           | artist text in status                          |
 | `status_album`            | album text in status                           |
 | `status_title`            | title text in status                           |
-| `artist_sort`             | albumartistsort field in fuzzy search displays |
-| `album`                   | generic album (track selection, queue)         |
-| `playing`                 | the "playing" text in status                   |
-| `paused`                  | the "paused" text in status                    |
-| `stopped`                 | the "stopped" text in status                   |
+| `field_artistsort`        | albumartistsort field in fuzzy search displays |
+| `field_album`             | generic album (track selection, queue)         |
+| `status_playing`          | the "playing" text in status                   |
+| `status_paused`           | the "paused" text in status                    |
+| `status_stopped`          | the "stopped" text in status                   |
 | `slash_span`              | the slashes in global search                   |
 | `search_query_active`     | search query text when the search is active    |
 | `search_query_inactive`   | search query text when the search is inactive  |

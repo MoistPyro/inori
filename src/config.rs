@@ -106,7 +106,13 @@ impl Config {
                 ("artist_sort", Value::Table(t)) => {
                     self.theme.artist_sort = deserialize_style(t);
                 }
+                ("field_artistsort", Value::Table(t)) => {
+                    self.theme.artist_sort = deserialize_style(t);
+                }
                 ("album", Value::Table(t)) => {
+                    self.theme.album = deserialize_style(t);
+                }
+                ("field_album", Value::Table(t)) => {
                     self.theme.album = deserialize_style(t);
                 }
                 ("playing", Value::Table(t)) => {
@@ -116,6 +122,15 @@ impl Config {
                     self.theme.paused = deserialize_style(t);
                 }
                 ("stopped", Value::Table(t)) => {
+                    self.theme.stopped = deserialize_style(t);
+                }
+                ("status_playing", Value::Table(t)) => {
+                    self.theme.playing = deserialize_style(t);
+                }
+                ("status_paused", Value::Table(t)) => {
+                    self.theme.paused = deserialize_style(t);
+                }
+                ("status_stopped", Value::Table(t)) => {
                     self.theme.stopped = deserialize_style(t);
                 }
                 ("slash_span", Value::Table(t)) => {

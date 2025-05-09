@@ -57,9 +57,18 @@ impl KeybindMap {
             Msg(Direction(Dirs::Vert(Vertical::Up))),
         );
         keybindings.insert(
+            KeyEvent::new(KeyCode::Char('p'), KeyModifiers::CONTROL),
+            Msg(Direction(Dirs::Vert(Vertical::Up))),
+        );
+        keybindings.insert(
             KeyEvent::new(KeyCode::Down, EMPTY),
             Msg(Direction(Dirs::Vert(Vertical::Down))),
         );
+        keybindings.insert(
+            KeyEvent::new(KeyCode::Char('n'), KeyModifiers::CONTROL),
+            Msg(Direction(Dirs::Vert(Vertical::Down))),
+        );
+
         keybindings.insert(
             KeyEvent::new(KeyCode::Left, EMPTY),
             Msg(Direction(Dirs::Horiz(Horizontal::Left))),

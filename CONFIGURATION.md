@@ -104,8 +104,8 @@ command1 = ["KEYSTR1", "KEYSTR2"]
 
 | Command name       | Explanation                                                          | default       | dvorak set | qwerty set |
 | ------------------ | -------------------------------------------------------------------- | ------------- | ---------- | ---------- |
-| `up`               | move up                                                              | `<up>`        | t          | k          |
-| `down`             | move down                                                            | `<down>`      | h          | j          |
+| `up`               | move up                                                              | `<up>`, C-p   | t          | k          |
+| `down`             | move down                                                            | `<down>`, C-n | h          | j          |
 | `left`             | move left                                                            | `<left>`      | d          | h          |
 | `right`            | move right                                                           | `<right>`     | n          | l          |
 | `toggle_playpause` | toggles between play and pause                                       | p             |            |            |

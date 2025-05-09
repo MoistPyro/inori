@@ -35,9 +35,7 @@ impl Theme {
             field_album: Style::default().bold().italic().fg(Red),
             field_artistsort: Style::default().fg(DarkGray),
             item_highlight_active: Style::default().fg(Black).bg(White),
-            item_highlight_inactive: Style::default()
-                .fg(Black)
-                .bg(DarkGray),
+            item_highlight_inactive: Style::default().fg(Black).bg(DarkGray),
             progress_bar_filled: Style::default()
                 .fg(LightYellow)
                 .bg(Black)

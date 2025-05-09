@@ -23,6 +23,16 @@ pub enum Screen {
     Queue,
 }
 
+impl From<&String> for Screen {
+    fn from(s: &String) -> Self {
+        match s.as_str() {
+            "library" | "Library" => Screen::Library,
+            "queue" | "Queue" => Screen::Queue,
+            _ => panic!("unknown screen: {}", s),
+        }
+    }
+}
+
 #[derive(Clone, Debug)]
 pub enum State {
     Searching,
@@ -109,6 +119,7 @@ pub struct Model {
     pub conn: Client<StreamTypes>,
     pub idle_conn: IdleClient<StreamTypes>,
     pub screen: Screen,
+    pub toggle_screen: Screen,
     pub library: LibraryState,
     pub queue: QueueSelector,
     pub currentsong: Option<Song>,
@@ -131,7 +142,12 @@ impl Model {
             status: conn.status()?,
             conn,
             idle_conn,
-            screen: Screen::Library,
+            screen: config.screens.first().cloned().unwrap_or(Screen::Library),
+            toggle_screen: config
+                .screens
+                .last()
+                .cloned()
+                .unwrap_or(Screen::Queue),
             library: LibraryState::new(),
             queue: QueueSelector::new(),
             currentsong: None,

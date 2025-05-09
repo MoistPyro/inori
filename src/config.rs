@@ -14,6 +14,7 @@ pub struct Config {
     pub theme: Theme,
     pub seek_seconds: i64,
     pub mpd_address: Option<String>,
+    pub screens: Vec<Screen>,
 }
 
 impl Config {
@@ -23,6 +24,7 @@ impl Config {
             theme: Theme::new(),
             seek_seconds: 5,
             mpd_address: None,
+            screens: vec![Screen::Library, Screen::Queue],
         }
     }
     pub fn try_read_config(mut self) -> Self {
@@ -47,6 +49,15 @@ impl Config {
                     }
                     ("mpd_address", Value::String(addr)) => {
                         self.mpd_address = Some(addr);
+                    }
+                    ("screens", Value::Array(screens)) => {
+                        self.screens = screens
+                            .iter()
+                            .map(|v| match v {
+                                Value::String(s) => s.into(),
+                                _ => panic!("Non-string value found in screens array: {}", v),
+                            })
+                            .collect()
                     }
                     (_k, _v) => panic!("unknown key {} or value {}", _k, _v),
                 }

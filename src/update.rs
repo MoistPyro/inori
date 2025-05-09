@@ -75,9 +75,9 @@ pub enum Message {
     UpdateDB,
     Select,
     SwitchState(State),
-    SwitchScreen(Screen),
-    Delete,
+    SwitchScreen(usize),
     ToggleScreen,
+    Delete,
     TogglePanel,
     Fold,
     Clear,
@@ -184,7 +184,10 @@ pub fn handle_msg(model: &mut Model, m: Message) -> Result<Update> {
             Ok(Update::empty())
         }
         Message::SwitchScreen(to) => {
-            model.screen = to;
+            if let Some(screen) = model.config.screens.get(to - 1) {
+                model.toggle_screen = model.screen.clone();
+                model.screen = screen.clone();
+            }
             Ok(Update::empty())
         }
         Message::UpdateDB => {

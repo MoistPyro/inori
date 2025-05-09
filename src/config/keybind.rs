@@ -1,5 +1,5 @@
 use crate::event_handler::Result;
-use crate::model::{Screen, State};
+use crate::model::State;
 use crate::update::Message::{self, *};
 use crate::update::*;
 use ratatui::crossterm::event::{KeyCode, KeyEvent, KeyModifiers};
@@ -27,9 +27,9 @@ pub fn get_message(s: &str) -> Option<Message> {
         "update_db" => Some(Message::UpdateDB),
         "select" => Some(Message::Select),
         "quit" => Some(Message::SwitchState(State::Done)),
-        "switch_to_library" => Some(Message::SwitchScreen(Screen::Library)),
-        "switch_to_queue" => Some(Message::SwitchScreen(Screen::Queue)),
-        "toggle_screen_lq" => Some(Message::ToggleScreen),
+        "screen_1" => Some(Message::SwitchScreen(1)),
+        "screen_2" => Some(Message::SwitchScreen(2)),
+        "toggle_screen" | "toggle_screen_lq" => Some(Message::ToggleScreen),
         "toggle_panel" => Some(Message::TogglePanel),
         "fold" => Some(Message::Fold),
         "clear_queue" => Some(Message::Clear),
@@ -86,11 +86,11 @@ impl KeybindMap {
         keybindings.insert(KeyEvent::new(KeyCode::Enter, EMPTY), Msg(Select));
         keybindings.insert(
             KeyEvent::new(KeyCode::Char('1'), EMPTY),
-            Msg(SwitchScreen(super::Screen::Library)),
+            Msg(SwitchScreen(1)),
         );
         keybindings.insert(
             KeyEvent::new(KeyCode::Char('2'), EMPTY),
-            Msg(SwitchScreen(super::Screen::Queue)),
+            Msg(SwitchScreen(2)),
         );
         keybindings.insert(
             KeyEvent::new(KeyCode::Char('q'), EMPTY),

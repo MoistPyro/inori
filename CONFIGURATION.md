@@ -17,6 +17,13 @@ For other operating systems, check the
   - Type: 64-bit integer
   - Default: 5
   - The time in seconds to seek by when using the `seek` and `seek_backwards` command
+- `screens`
+  - Type: Array of strings
+  - Default: `["library", "queue"]`
+  - Defines the screens mapped by keybindings. The first screen in the
+    array is the initial startup screen. The last screen is the initial
+    screen that `toggle_screen` (default: `<tab>`) toggles to.
+  - The only two currently available screens are `"library"` and `"queue"`.
 
 ## Keybindings
 
@@ -95,36 +102,36 @@ command1 = ["KEYSTR1", "KEYSTR2"]
 
 ### List of commands and defaults
 
-| Command name        | Explanation                                        | default       | dvorak set | qwerty set |
-| ------------------- | -------------------------------------------------- | ------------- | ---------- | ---------- |
-| `up`                | move up                                            | `<up>`        | t          | k          |
-| `down`              | move down                                          | `<down>`      | h          | j          |
-| `left`              | move left                                          | `<left>`      | d          | h          |
-| `right`             | move right                                         | `<right>`     | n          | l          |
-| `toggle_playpause`  | toggles between play and pause                     | p             |            |            |
-| `next song`         | jumps to the next song in the queue                |               |            |            |
-| `previous song`     | jumps to the previous song in the queue            |               |            |            |
-| `seek`              | seeks forward by 5 seconds                         |               |            |            |
-| `seek_backwards`    | seeks backwards by 5 seconds                       |               |            |            |
-| `select`            | act on the selected entry                          | `<enter>`     |            |            |
-| `quit`              | close the program                                  | q             |            |            |
-| `switch_to_library` | switch to library screen                           | 1             |            |            |
-| `switch_to_queue`   | switch to queue screen                             | 2             |            |            |
-| `toggle_screen_lq`  | toggle between library/queue                       | `<tab>`       |            |            |
-| `toggle_panel`      | [library] switch between artist and track selector |               |            |            |
-| `fold`              | [library/track] toggle fold album                  | `<space>`     |            |            |
-| `clear_queue`       | clear queue                                        | -             |            |            |
-| `local_search`      | search local selector                              | /             |            |            |
-| `global_search`     | [library] global jumping search                    | C-s           | g          | C-g        |
-| `escape`            | escape                                             | `<esc>`       | C-g        |            |
-| `delete`            | [queue] deletes the selected item off queue        | `<backspace>` |            |            |
-| `toggle_repeat`     | toggle repeat                                      | r             |            |            |
-| `toggle_single`     | toggle single                                      | s             |            |            |
-| `toggle_consume`    | toggle consume                                     | c             |            |            |
-| `toggle_random`     | toggle random                                      | z             |            |            |
-| `update_db`         | update mpd db                                      | u             |            |            |
-| `top`               | jump to top                                        | `<home>`      | <          | g g        |
-| `bottom`            | jump to bottom                                     | `<end>`       | >          | G          |
+| Command name       | Explanation                                                          | default       | dvorak set | qwerty set |
+| ------------------ | -------------------------------------------------------------------- | ------------- | ---------- | ---------- |
+| `up`               | move up                                                              | `<up>`        | t          | k          |
+| `down`             | move down                                                            | `<down>`      | h          | j          |
+| `left`             | move left                                                            | `<left>`      | d          | h          |
+| `right`            | move right                                                           | `<right>`     | n          | l          |
+| `toggle_playpause` | toggles between play and pause                                       | p             |            |            |
+| `next song`        | jumps to the next song in the queue                                  |               |            |            |
+| `previous song`    | jumps to the previous song in the queue                              |               |            |            |
+| `seek`             | seeks forward by 5 seconds                                           |               |            |            |
+| `seek_backwards`   | seeks backwards by 5 seconds                                         |               |            |            |
+| `select`           | act on the selected entry                                            | `<enter>`     |            |            |
+| `quit`             | close the program                                                    | q             |            |            |
+| `screen_1`         | switch to screen 1 (default: library)                                | 1             |            |            |
+| `screen_2`         | switch to screen 2 (default: queue)                                  | 2             |            |            |
+| `toggle_screen`    | toggle between your last two used screens (default: library & queue) | `<tab>`       |            |            |
+| `toggle_panel`     | [library] switch between artist and track selector                   |               |            |            |
+| `fold`             | [library/track] toggle fold album                                    | `<space>`     |            |            |
+| `clear_queue`      | clear queue                                                          | -             |            |            |
+| `local_search`     | search local selector                                                | /             |            |            |
+| `global_search`    | [library] global jumping search                                      | C-s           | g          | C-g        |
+| `escape`           | escape                                                               | `<esc>`       | C-g        |            |
+| `delete`           | [queue] deletes the selected item off queue                          | `<backspace>` |            |            |
+| `toggle_repeat`    | toggle repeat                                                        | r             |            |            |
+| `toggle_single`    | toggle single                                                        | s             |            |            |
+| `toggle_consume`   | toggle consume                                                       | c             |            |            |
+| `toggle_random`    | toggle random                                                        | z             |            |            |
+| `update_db`        | update mpd db                                                        | u             |            |            |
+| `top`              | jump to top                                                          | `<home>`      | <          | g g        |
+| `bottom`           | jump to bottom                                                       | `<end>`       | >          | G          |
 
 Note that the dvorak/qwerty sets _do not_ delete the default
 keybindings.

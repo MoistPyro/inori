@@ -3,6 +3,7 @@ use ratatui::prelude::*;
 use ratatui::style::Color::*;
 use ratatui::style::Style;
 mod artist_select_renderer;
+pub mod layout;
 pub mod library_renderer;
 pub mod queue_renderer;
 mod search_renderer;

@@ -1,4 +1,6 @@
 use super::artist_select_renderer::render_artist_list;
+use super::layout;
+use super::layout::InoriLayout;
 use super::search_renderer::make_search_box;
 use super::status_renderer::render_status;
 use super::track_select_renderer::render_track_list;
@@ -88,68 +90,35 @@ pub fn render_global_search(
 }
 
 pub fn render(model: &mut Model, frame: &mut Frame, theme: &Theme) {
-    let layout = Layout::vertical(vec![Max(4), Min(1)]).split(frame.area());
-    let menu_layout =
-        Layout::horizontal(vec![Ratio(1, 3), Ratio(2, 3)]).split(layout[1]);
-    let header_layout = Layout::horizontal(vec![Ratio(1, 1)]).split(layout[0]);
-    let left_panel =
-        Layout::vertical(vec![Max(3), Min(1)]).split(menu_layout[0]);
-    let right_panel =
-        Layout::vertical(vec![Max(3), Min(1)]).split(menu_layout[1]);
-    let center_popup_h = Layout::horizontal(vec![
-        Percentage(20),
-        Percentage(60),
-        Percentage(20),
-    ])
-    .split(frame.area());
+    let layout =
+        layout::library_layout::LibraryLayout::new(frame.area(), model);
 
-    let center_popup_v =
-        Layout::vertical(vec![Percentage(20), Percentage(60), Percentage(20)])
-            .split(center_popup_h[1]);
-    let center_popup = center_popup_v[1];
+    render_status(model, frame, layout.header, theme);
+    render_track_list(model, frame, layout.track_select, theme);
 
-    if model
-        .window_height
-        .is_some_and(|i| i != frame.area().height.into())
-    {
-        model.window_height = Some(frame.area().height.into());
-    }
-
-    render_status(model, frame, header_layout[0], theme);
-
-    if model
-        .library
-        .selected_item()
-        .is_some_and(|a| a.search.active)
-    {
+    if let Some(a) = layout.track_search {
         frame.render_widget(
             make_search_box(
                 &model.library.selected_item().unwrap().search.query,
                 matches!(model.state, State::Searching),
                 theme,
             ),
-            right_panel[0],
+            a,
         );
-        render_track_list(model, frame, right_panel[1], theme);
-    } else {
-        render_track_list(model, frame, menu_layout[1], theme);
     }
 
-    if model.library.artist_search.active {
+    render_artist_list(model, frame, layout.artist_select, theme);
+    if let Some(a) = layout.artist_search {
         frame.render_widget(
             make_search_box(
                 &model.library.artist_search.query,
                 matches!(model.state, State::Searching),
                 theme,
             ),
-            left_panel[0],
+            a,
         );
-        render_artist_list(model, frame, left_panel[1], theme);
-    } else {
-        render_artist_list(model, frame, menu_layout[0], theme);
     }
-
-    if model.library.global_search.search.active {
-        render_global_search(model, frame, center_popup, theme)
+    if let Some(a) = layout.center_popup {
+        render_global_search(model, frame, a, theme);
     }
 }

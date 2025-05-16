@@ -1,3 +1,5 @@
+use super::layout::queue_layout::QueueLayout;
+use super::layout::InoriLayout;
 use super::search_renderer::make_search_box;
 use super::Theme;
 use crate::model::proto::Searchable;
@@ -63,32 +65,22 @@ pub fn make_queue<'a>(model: &mut Model, theme: &Theme) -> Table<'a> {
 }
 
 pub fn render(model: &mut Model, frame: &mut Frame, theme: &Theme) {
-    let layout = Layout::default()
-        .direction(Direction::Vertical)
-        .constraints(vec![Max(4), Min(1), Max(3)])
-        .split(frame.area());
-    let queue_and_search =
-        Layout::vertical(vec![Max(3), Min(1)]).split(layout[1]);
-
-    render_status(model, frame, layout[0], theme);
+    let layout = QueueLayout::new(frame.area(), model);
+    render_status(model, frame, layout.header, theme);
     let table = make_queue(model, theme);
-    if model.queue.search.active {
+
+    if let Some(a) = layout.search {
         frame.render_widget(
             make_search_box(
                 &model.queue.search.query,
                 matches!(model.state, State::Searching),
                 theme,
             ),
-            queue_and_search[0],
+            a,
         );
-        frame.render_stateful_widget(
-            table,
-            queue_and_search[1],
-            &mut model.queue.state,
-        );
-    } else {
-        frame.render_stateful_widget(table, layout[1], &mut model.queue.state);
     }
+
+    frame.render_stateful_widget(table, layout.queue, &mut model.queue.state);
 
     let ratio: f64 = match (model.status.elapsed, model.status.duration) {
         (Some(e), Some(t)) => e.as_secs_f64() / t.as_secs_f64(),
@@ -102,6 +94,6 @@ pub fn render(model: &mut Model, frame: &mut Frame, theme: &Theme) {
             .unfilled_style(theme.progress_bar_unfilled)
             .line_set(symbols::line::THICK)
             .ratio(ratio),
-        layout[2],
-    )
+        layout.progress,
+    );
 }

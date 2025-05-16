@@ -15,6 +15,7 @@ pub struct Config {
     pub seek_seconds: i64,
     pub mpd_address: Option<String>,
     pub screens: Vec<Screen>,
+    pub nucleo_prefer_prefix: bool,
 }
 
 impl Config {
@@ -25,6 +26,7 @@ impl Config {
             seek_seconds: 5,
             mpd_address: None,
             screens: vec![Screen::Library, Screen::Queue],
+            nucleo_prefer_prefix: false,
         }
     }
     pub fn try_read_config(mut self) -> Self {
@@ -59,6 +61,7 @@ impl Config {
                             })
                             .collect()
                     }
+                    ("nucleo_prefer_prefix", Value::Boolean(t)) => self.nucleo_prefer_prefix = t,
                     (_k, _v) => panic!("unknown key {} or value {}", _k, _v),
                 }
             }

@@ -154,7 +154,7 @@ impl Model {
             currentsong: None,
             matcher: {
                 let mut default_config = nucleo_matcher::Config::DEFAULT;
-                default_config.prefer_prefix = true;
+                default_config.prefer_prefix = config.nucleo_prefer_prefix;
                 Matcher::new(default_config)
             },
             config,

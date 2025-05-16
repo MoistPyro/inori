@@ -24,6 +24,8 @@ For other operating systems, check the
     array is the initial startup screen. The last screen is the initial
     screen that `toggle_screen` (default: `<tab>`) toggles to.
   - The only two currently available screens are `"library"` and `"queue"`.
+- `nucleo_prefer_prefix`
+  - See [relevant nucleo docs](https://docs.rs/nucleo/latest/nucleo/struct.Config.html#structfield.prefer_prefix).
 
 ## Keybindings
 

@@ -2,21 +2,24 @@ use mpd::Song;
 use mpd::Status;
 use std::time::Duration;
 
-pub fn safe_increment(idx: usize, length: usize) -> usize {
+pub fn safe_add(idx: usize, k: usize, length: usize) -> usize {
     if length == 0 {
         return idx;
     }
-    (idx + 1) % length
-}
-
-pub fn safe_decrement(idx: usize, length: usize) -> usize {
-    if length == 0 {
-        return idx;
-    }
-    if idx == 0 {
+    if idx + k >= length {
         return length - 1;
     }
-    idx - 1
+    idx + k
+}
+
+pub fn safe_subtract(idx: usize, k: usize, length: usize) -> usize {
+    if length == 0 || idx == 0 {
+        return idx;
+    }
+    if k >= idx {
+        return 0;
+    }
+    idx - k
 }
 
 pub fn song_album(s: &Song) -> Option<&String> {

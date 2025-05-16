@@ -4,14 +4,22 @@ use super::*;
 pub trait SelectorState {
     fn selected(&self) -> Option<usize>;
     fn set_selected(&mut self, s: Option<usize>);
+    fn offset(&self) -> usize;
+    fn set_offset(&mut self, s: usize);
 }
 
 impl SelectorState for ListState {
     fn selected(&self) -> Option<usize> {
         self.selected()
     }
+    fn offset(&self) -> usize {
+        self.offset()
+    }
     fn set_selected(&mut self, s: Option<usize>) {
         *self.selected_mut() = s;
+    }
+    fn set_offset(&mut self, s: usize) {
+        *self.offset_mut() = s;
     }
 }
 
@@ -19,8 +27,14 @@ impl SelectorState for TableState {
     fn selected(&self) -> Option<usize> {
         self.selected()
     }
+    fn offset(&self) -> usize {
+        self.offset()
+    }
     fn set_selected(&mut self, s: Option<usize>) {
         *self.selected_mut() = s;
+    }
+    fn set_offset(&mut self, s: usize) {
+        *self.offset_mut() = s;
     }
 }
 
@@ -32,8 +46,14 @@ pub trait Selector {
     fn selected(&self) -> Option<usize> {
         self.selector().selected()
     }
+    fn offset(&self) -> usize {
+        self.selector().offset()
+    }
     fn set_selected(&mut self, val: Option<usize>) {
         self.selector_mut().set_selected(val);
+    }
+    fn set_offset(&mut self, val: usize) {
+        self.selector_mut().set_offset(val);
     }
     fn init(&mut self) {
         // idempotent

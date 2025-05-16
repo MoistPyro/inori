@@ -19,6 +19,8 @@ pub fn get_message(s: &str) -> Option<Message> {
     match s {
         "up" => Some(Message::Direction(Dirs::Vert(Vertical::Up))),
         "down" => Some(Message::Direction(Dirs::Vert(Vertical::Down))),
+        "screenful_up" => Some(Message::ScrollScreenful(Vertical::Up)),
+        "screenful_down" => Some(Message::ScrollScreenful(Vertical::Down)),
         "top" => Some(Message::Direction(Dirs::Vert(Vertical::Top))),
         "bottom" => Some(Message::Direction(Dirs::Vert(Vertical::Bottom))),
         "left" => Some(Message::Direction(Dirs::Horiz(Horizontal::Left))),
@@ -68,7 +70,6 @@ impl KeybindMap {
             KeyEvent::new(KeyCode::Char('n'), KeyModifiers::CONTROL),
             Msg(Direction(Dirs::Vert(Vertical::Down))),
         );
-
         keybindings.insert(
             KeyEvent::new(KeyCode::Left, EMPTY),
             Msg(Direction(Dirs::Horiz(Horizontal::Left))),
@@ -135,6 +136,16 @@ impl KeybindMap {
         );
         keybindings
             .insert(KeyEvent::new(KeyCode::Char('u'), EMPTY), Msg(UpdateDB));
+
+        keybindings.insert(
+            KeyEvent::new(KeyCode::PageDown, EMPTY),
+            Msg(ScrollScreenful(Vertical::Down)),
+        );
+        keybindings.insert(
+            KeyEvent::new(KeyCode::PageUp, EMPTY),
+            Msg(ScrollScreenful(Vertical::Up)),
+        );
+
         Self(keybindings)
     }
     pub fn with_dvorak_style(mut self) -> Self {
@@ -170,6 +181,14 @@ impl KeybindMap {
             KeyEvent::new(KeyCode::Char('g'), KeyModifiers::CONTROL),
             Msg(Escape),
         );
+        self.0.insert(
+            KeyEvent::new(KeyCode::Char('v'), KeyModifiers::CONTROL),
+            Msg(ScrollScreenful(Vertical::Down)),
+        );
+        self.0.insert(
+            KeyEvent::new(KeyCode::Char('v'), KeyModifiers::ALT),
+            Msg(ScrollScreenful(Vertical::Up)),
+        );
         self
     }
     pub fn with_qwerty_style(mut self) -> Self {
@@ -196,6 +215,14 @@ impl KeybindMap {
         self.0.insert(
             KeyEvent::new(KeyCode::Char('G'), KeyModifiers::empty()),
             Msg(Direction(Dirs::Vert(Vertical::Bottom))),
+        );
+        self.0.insert(
+            KeyEvent::new(KeyCode::Char('f'), KeyModifiers::CONTROL),
+            Msg(ScrollScreenful(Vertical::Down)),
+        );
+        self.0.insert(
+            KeyEvent::new(KeyCode::Char('b'), KeyModifiers::CONTROL),
+            Msg(ScrollScreenful(Vertical::Up)),
         );
         self.insert(
             Direction(Dirs::Vert(Vertical::Top)),
@@ -263,6 +290,8 @@ pub fn parse_keybind_single(s: &str) -> Option<KeyCode> {
             "<enter>" => Some(KeyCode::Enter),
             "<home>" => Some(KeyCode::Home),
             "<end>" => Some(KeyCode::End),
+            "<pageup>" => Some(KeyCode::PageUp),
+            "<pagedown>" => Some(KeyCode::PageDown),
             _ => None,
         }
     }

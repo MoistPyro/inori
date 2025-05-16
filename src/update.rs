@@ -2,7 +2,6 @@ use crate::config::keybind::{KeybindMap, KeybindTarget};
 use crate::event_handler::Result;
 use crate::model::proto::Searchable;
 use crate::model::{Model, Screen, State};
-use crate::util::{safe_decrement, safe_increment};
 use bitflags::bitflags;
 use mpd::status::State as PlayState;
 use mpd::Subsystem;
@@ -68,6 +67,7 @@ pub enum SeekDirection {
 #[derive(Clone, Debug)]
 pub enum Message {
     Direction(Dirs),
+    ScrollScreenful(Vertical),
     PlayPause,
     NextSong,
     PreviousSong,

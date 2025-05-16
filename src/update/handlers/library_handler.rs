@@ -2,6 +2,8 @@ use super::*;
 use crate::event_handler::Result;
 use crate::model::ItemRef::*;
 use crate::model::LibActiveSelector::*;
+use crate::view::layout::library_layout::LibraryLayout;
+use crate::view::layout::InoriLayout;
 use mpd::Query;
 use mpd::Term;
 use std::borrow::Cow::Borrowed;
@@ -81,7 +83,7 @@ pub fn handle_search(model: &mut Model, k: KeyEvent) -> Result<Update> {
                 &mut model.library.global_search,
                 k,
                 &mut model.matcher,
-                model.window_height,
+                model.frame_size.height.into(),
             ) {
                 handle_msg(model, m)
             } else {
@@ -97,7 +99,7 @@ pub fn handle_search(model: &mut Model, k: KeyEvent) -> Result<Update> {
                 &mut model.library,
                 k,
                 &mut model.matcher,
-                model.window_height,
+                model.frame_size.height.into(),
             ) {
                 handle_msg(model, m)
             } else {
@@ -127,6 +129,13 @@ pub fn handle_library_artist(
     match msg {
         Message::Direction(Dirs::Vert(d)) => {
             handle_vertical(d, &mut model.library);
+            Ok(Update::CURRENT_ARTIST)
+        }
+        Message::ScrollScreenful(v) => {
+            let k = LibraryLayout::new(model.frame_size, model)
+                .artist_select
+                .height;
+            scroll_screenful(v, k.into(), &mut model.library);
             Ok(Update::CURRENT_ARTIST)
         }
         Message::Direction(Dirs::Horiz(Horizontal::Right)) => {
@@ -180,6 +189,15 @@ pub fn handle_library_track(model: &mut Model, msg: Message) -> Result<Update> {
         Message::Direction(Dirs::Vert(d)) => {
             if let Some(art) = model.library.selected_item_mut() {
                 handle_vertical(d, art);
+            }
+            Ok(Update::empty())
+        }
+        Message::ScrollScreenful(v) => {
+            let k = LibraryLayout::new(model.frame_size, model)
+                .track_select
+                .height;
+            if let Some(art) = model.library.selected_item_mut() {
+                scroll_screenful(v, k.into(), art);
             }
             Ok(Update::empty())
         }

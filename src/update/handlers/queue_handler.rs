@@ -1,5 +1,6 @@
 use super::*;
-use crate::event_handler::Result;
+use crate::view::layout::InoriLayout;
+use crate::{event_handler::Result, view::layout::queue_layout::QueueLayout};
 
 pub fn handle_queue(model: &mut Model, msg: Message) -> Result<Update> {
     match msg {
@@ -9,6 +10,11 @@ pub fn handle_queue(model: &mut Model, msg: Message) -> Result<Update> {
         }
         Message::Direction(Dirs::Vert(d)) => {
             handle_vertical(d, &mut model.queue);
+            Ok(Update::empty())
+        }
+        Message::ScrollScreenful(v) => {
+            let k = QueueLayout::new(model.frame_size, model).queue.height;
+            scroll_screenful(v, k.into(), &mut model.queue);
             Ok(Update::empty())
         }
         Message::Select => {
@@ -24,11 +30,9 @@ pub fn handle_queue(model: &mut Model, msg: Message) -> Result<Update> {
                 if let Some(p) = model.queue.selected() {
                     let to = match d {
                         Horizontal::Left => {
-                            safe_decrement(p, model.queue.len())
+                            safe_subtract(p, 1, model.queue.len())
                         }
-                        Horizontal::Right => {
-                            safe_increment(p, model.queue.len())
-                        }
+                        Horizontal::Right => safe_add(p, 1, model.queue.len()),
                     };
                     model.conn.swap(p as u32, to as u32)?;
                     model.queue.set_selected(Some(to));
@@ -40,8 +44,9 @@ pub fn handle_queue(model: &mut Model, msg: Message) -> Result<Update> {
         Message::Delete => {
             if let Some(p) = model.queue.selected() {
                 model.conn.delete(p as u32)?;
-                model.queue.set_selected(Some(safe_decrement(
+                model.queue.set_selected(Some(safe_subtract(
                     p,
+                    1,
                     model.queue.len() - 1,
                 )));
                 model.queue.watch_oob();
@@ -74,7 +79,7 @@ pub fn handle_search(model: &mut Model, k: KeyEvent) -> Result<Update> {
         &mut model.queue,
         k,
         &mut model.matcher,
-        model.window_height,
+        model.frame_size.height.into(),
     ) {
         handle_msg(model, m)
     } else {

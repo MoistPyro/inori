@@ -86,6 +86,8 @@ SPECIAL_KEY := <space>
   | <enter>
   | <home>
   | <end>
+  | <pagedown>
+  | <pageup>
 ```
 
 Each of the modifiers corresponds to a modifier key, `CTRL, META,
@@ -108,6 +110,10 @@ command1 = ["KEYSTR1", "KEYSTR2"]
 | `down`             | move down                                                            | `<down>`, C-n | h          | j          |
 | `left`             | move left                                                            | `<left>`      | d          | h          |
 | `right`            | move right                                                           | `<right>`     | n          | l          |
+| `top`              | jump to top                                                          | `<home>`      | <          | g g        |
+| `bottom`           | jump to bottom                                                       | `<end>`       | >          | G          |
+| `screenful_up`     | scroll down one page, cursor to first line                           | `<pageup>`    | M-v        | C-b        |
+| `screenful_down`   | scroll up one page, cursor to last line                              | `<pagedown>`  | C-v        | C-f        |
 | `toggle_playpause` | toggles between play and pause                                       | p             |            |            |
 | `next song`        | jumps to the next song in the queue                                  |               |            |            |
 | `previous song`    | jumps to the previous song in the queue                              |               |            |            |
@@ -130,8 +136,6 @@ command1 = ["KEYSTR1", "KEYSTR2"]
 | `toggle_consume`   | toggle consume                                                       | c             |            |            |
 | `toggle_random`    | toggle random                                                        | z             |            |            |
 | `update_db`        | update mpd db                                                        | u             |            |            |
-| `top`              | jump to top                                                          | `<home>`      | <          | g g        |
-| `bottom`           | jump to bottom                                                       | `<end>`       | >          | G          |
 
 Note that the dvorak/qwerty sets _do not_ delete the default
 keybindings.

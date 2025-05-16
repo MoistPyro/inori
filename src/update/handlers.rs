@@ -1,5 +1,7 @@
 use super::*;
 use crate::model::*;
+use crate::util::safe_add;
+use crate::util::safe_subtract;
 use event::KeyModifiers;
 use nucleo_matcher::Matcher;
 use proto::*;
@@ -15,13 +17,36 @@ pub fn handle_vertical(msg: Vertical, selector: &mut impl Selector) {
             }
         }
         Some(sel) => selector.set_selected(match msg {
-            Vertical::Up => Some(safe_decrement(sel, selector.len())),
-            Vertical::Down => Some(safe_increment(sel, selector.len())),
+            Vertical::Up => Some(safe_subtract(sel, 1, selector.len())),
+            Vertical::Down => Some(safe_add(sel, 1, selector.len())),
             Vertical::Top => Some(0),
             Vertical::Bottom => {
-                Some(safe_decrement(selector.len(), selector.len()))
+                Some(safe_subtract(selector.len(), 1, selector.len()))
             }
         }),
+    }
+}
+
+pub fn scroll_screenful(
+    dir: Vertical,
+    height: usize,
+    selector: &mut impl Selector,
+) {
+    let len = selector.len();
+    match dir {
+        Vertical::Up => {
+            selector.set_selected(Some(selector.offset()));
+            selector.set_offset(safe_subtract(selector.offset(), height, len));
+        }
+        Vertical::Down => {
+            let mut next = safe_add(selector.offset(), height, len);
+            if next > 0 && next < safe_subtract(len, 1, len) {
+                next = safe_subtract(next, 3, len);
+                selector.set_offset(next);
+            }
+            selector.set_selected(Some(next));
+        }
+        _ => {}
     }
 }
 
@@ -81,7 +106,7 @@ pub fn handle_search_k<T>(
     s: &mut impl Searchable<T>,
     k: KeyEvent,
     matcher: &mut Matcher,
-    top_k: Option<usize>,
+    top_k: usize,
 ) -> Option<Message> {
     if k.modifiers.contains(KeyModifiers::CONTROL) {
         match k.code {
@@ -106,7 +131,7 @@ pub fn handle_search_k<T>(
             _ => {}
         }
     }
-    s.update_filter_cache(matcher, top_k);
+    s.update_filter_cache(matcher, Some(top_k));
     s.watch_oob();
     None
 }

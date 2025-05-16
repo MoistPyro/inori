@@ -5,6 +5,7 @@ use mpd::idle::IdleClient;
 use mpd::{Client, Song, Status, Subsystem};
 use nucleo_matcher::{Matcher, Utf32String};
 use ratatui::crossterm::event::KeyEvent;
+use ratatui::layout::Rect;
 use ratatui::widgets::*;
 mod impl_album_song;
 mod impl_artiststate;
@@ -126,11 +127,11 @@ pub struct Model {
     pub matcher: nucleo_matcher::Matcher,
     pub config: Config,
     pub parse_state: Vec<KeyEvent>,
-    pub window_height: Option<usize>,
+    pub frame_size: Rect,
 }
 
 impl Model {
-    pub fn new() -> Result<Self> {
+    pub fn new(frame_size: Rect) -> Result<Self> {
         let config = Config::default().try_read_config();
         let mut conn = Self::make_connection(&config);
         let idle_conn = IdleClient::new(
@@ -158,7 +159,7 @@ impl Model {
             },
             config,
             parse_state: Vec::new(),
-            window_height: Some(100),
+            frame_size,
         })
     }
 

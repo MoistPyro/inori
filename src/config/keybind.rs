@@ -299,7 +299,7 @@ pub fn parse_keybind(s: String) -> Result<Vec<KeyEvent>> {
         } else if let Some(keycode) =
             word.strip_prefix("M-").and_then(parse_keybind_single)
         {
-            out.push(KeyEvent::new(keycode, KeyModifiers::META))
+            out.push(KeyEvent::new(keycode, KeyModifiers::ALT))
         } else if let Some(keycode) =
             word.strip_prefix("S-").and_then(parse_keybind_single)
         {

@@ -1,6 +1,7 @@
 extern crate mpd;
+use std::error::Error;
 use mpd::client::StreamTypes;
-use mpd::error::Result;
+//use mpd::error::Result;
 use mpd::idle::IdleClient;
 use mpd::{Client, Song, Status, Subsystem};
 use nucleo_matcher::{Matcher, Utf32String};
@@ -17,6 +18,8 @@ mod search_utils;
 use crate::config::Config;
 use crate::model::proto::*;
 use crate::update::build_library;
+
+type Result<T> = std::result::Result<T, Box<dyn Error>>;
 
 #[derive(Clone, Debug)]
 pub enum Screen {
@@ -132,7 +135,7 @@ pub struct Model {
 
 impl Model {
     pub fn new(frame_size: Rect) -> Result<Self> {
-        let config = Config::default().try_read_config();
+        let config = Config::default().try_read_config()?;
         let mut conn = Self::make_connection(&config);
         let idle_conn = IdleClient::new(
             Self::make_connection(&config),

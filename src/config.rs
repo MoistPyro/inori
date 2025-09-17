@@ -2,7 +2,6 @@ use crate::model::*;
 use crate::view::Theme;
 use crate::event_handler::Result;
 use platform_dirs::AppDirs;
-use ratatui::style::Modifier;
 use ratatui::style::Style;
 use std::error::Error;
 use std::fmt::Display;
@@ -46,7 +45,7 @@ impl Config {
                     ("seek_seconds", Value::Integer(k)) if k > 0 => {
                         self.seek_seconds = k
                     }
-                    ("theme", Value::Table(t)) => self.read_theme(t)?,
+                    ("theme", Value::Table(t)) => self.theme = self.theme.apply_theme(t)?,
                     ("dvorak_keybindings", Value::Boolean(true)) => {
                         self.keybindings = self.keybindings.with_dvorak_style();
                     }
@@ -101,107 +100,18 @@ impl Config {
         }
         Ok(())
     }
-
-    pub fn read_theme(&mut self, t: Table) -> Result<()> {
-        for (key, value) in t {
-            match (key.as_str(), value) {
-                ("item_highlight_active", Value::Table(t)) => {
-                    self.theme.item_highlight_active = deserialize_style(t)?;
-                }
-                ("item_highlight_inactive", Value::Table(t)) => {
-                    self.theme.item_highlight_inactive = deserialize_style(t)?;
-                }
-                ("block_active", Value::Table(t)) => {
-                    self.theme.block_active = deserialize_style(t)?;
-                }
-                ("status_artist", Value::Table(t)) => {
-                    self.theme.status_artist = deserialize_style(t)?;
-                }
-                ("status_album", Value::Table(t)) => {
-                    self.theme.status_album = deserialize_style(t)?;
-                }
-                ("status_title", Value::Table(t)) => {
-                    self.theme.status_title = deserialize_style(t)?;
-                }
-                ("artist_sort", Value::Table(t)) => {
-                    self.theme.field_artistsort = deserialize_style(t)?;
-                }
-                ("field_artistsort", Value::Table(t)) => {
-                    self.theme.field_artistsort = deserialize_style(t)?;
-                }
-                ("album", Value::Table(t)) => {
-                    self.theme.field_album = deserialize_style(t)?;
-                }
-                ("field_album", Value::Table(t)) => {
-                    self.theme.field_album = deserialize_style(t)?;
-                }
-                ("playing", Value::Table(t)) => {
-                    self.theme.status_playing = deserialize_style(t)?;
-                }
-                ("paused", Value::Table(t)) => {
-                    self.theme.status_paused = deserialize_style(t)?;
-                }
-                ("stopped", Value::Table(t)) => {
-                    self.theme.status_stopped = deserialize_style(t)?;
-                }
-                ("status_playing", Value::Table(t)) => {
-                    self.theme.status_playing = deserialize_style(t)?;
-                }
-                ("status_paused", Value::Table(t)) => {
-                    self.theme.status_paused = deserialize_style(t)?;
-                }
-                ("status_stopped", Value::Table(t)) => {
-                    self.theme.status_stopped = deserialize_style(t)?;
-                }
-                ("slash_span", Value::Table(t)) => {
-                    self.theme.slash_span = deserialize_style(t)?;
-                }
-                ("search_query_active", Value::Table(t)) => {
-                    self.theme.search_query_active = deserialize_style(t)?;
-                }
-                ("search_query_inactive", Value::Table(t)) => {
-                    self.theme.search_query_inactive = deserialize_style(t)?;
-                }
-                ("progress_bar_filled", Value::Table(t)) => {
-                    self.theme.progress_bar_filled = deserialize_style(t)?;
-                }
-                ("progress_bar_unfilled", Value::Table(t)) => {
-                    self.theme.progress_bar_unfilled = deserialize_style(t)?;
-                }
-                (other, _) => return Err(Box::new(ConfigError::UnknownThemeOption(other.to_string()))),
-            }
-        }
-        Ok(())
-    }
 }
 
-fn modifiers_arr(modifiers: &Vec<Value>) -> String {
-    let mut m = String::new();
-    for i in modifiers {
-        if let Value::String(s) = i {
-            if Modifier::from_name(s).is_some() {
-                if !m.is_empty() {
-                    m.push('|');
-                }
-                m.push_str(s);
-            } else {
-                continue //TODO: log this: Error while parsing theme modifier array: unknown modifier
-            }
-        }
-    }
-    m
-}
-
-//cleaner code, but without trailing pipe. unsure if it's needed.
-//this one does not log or throw. it simply ignores 'bad' mods
-fn _join_modifier_array(modifiers: &Vec<Value>) -> String {
+//does not log or throw. it simply ignores 'bad' mods
+fn join_modifier_array(modifiers: &Vec<Value>) -> String {
     let modifier_strings: Vec<String> = modifiers.iter()
-        .filter_map(|m| m.as_str())
-        .map(|s| s.to_string())
+        .filter_map(|m| m
+            .as_str()
+            .map(|s| s.to_string()))
         .collect();
 
     let mod_string: String = modifier_strings.join("|");
-    mod_string
+    mod_string + "|"
 }
 
 pub fn deserialize_style(mut t: Table) -> Result<Style> {
@@ -212,16 +122,16 @@ pub fn deserialize_style(mut t: Table) -> Result<Style> {
         t.insert("sub_modifier".into(), Value::String("".into()));
     }
     if let Value::Array(a) = t.get("add_modifier").unwrap() {
-        t.insert("add_modifier".into(), Value::String(modifiers_arr(a)));
+        t.insert("add_modifier".into(), Value::String(join_modifier_array(a)));
     }
     if let Value::Array(a) = t.get("sub_modifier").unwrap() {
-        t.insert("sub_modifier".into(), Value::String(modifiers_arr(a)));
+        t.insert("sub_modifier".into(), Value::String(join_modifier_array(a)));
     }
     Ok(t.try_into()?)
 }
 
 #[derive(Debug)]
-enum ConfigError {
+pub enum ConfigError {
     MissingMessage(String),
     //UnknownModifier(String),
     UnknownThemeOption(String),

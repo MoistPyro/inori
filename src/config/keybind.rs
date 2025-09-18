@@ -3,15 +3,18 @@ use crate::model::State;
 use crate::update::Message::{self, *};
 use crate::update::*;
 use ratatui::crossterm::event::{KeyCode, KeyEvent, KeyModifiers};
+use serde::Deserialize;
 use std::collections::HashMap;
 use std::fmt;
 
+#[derive(Deserialize)]
 pub enum KeybindTarget {
     Map(KeybindMap),
     Msg(Message),
 }
 use KeybindTarget::*;
 
+#[derive(Deserialize)]
 pub struct KeybindMap(pub HashMap<KeyEvent, KeybindTarget>);
 const EMPTY: KeyModifiers = KeyModifiers::empty();
 
@@ -51,8 +54,8 @@ pub fn get_message(s: &str) -> Option<Message> {
     }
 }
 
-impl KeybindMap {
-    pub fn default() -> Self {
+impl Default for KeybindMap {
+    fn default() -> Self {
         let mut keybindings = HashMap::new();
         keybindings.insert(
             KeyEvent::new(KeyCode::Up, EMPTY),
@@ -148,6 +151,9 @@ impl KeybindMap {
 
         Self(keybindings)
     }
+}
+
+impl KeybindMap {
     pub fn with_dvorak_style(mut self) -> Self {
         self.0.insert(
             KeyEvent::new(KeyCode::Char('t'), EMPTY),

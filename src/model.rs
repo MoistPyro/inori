@@ -8,6 +8,7 @@ use nucleo_matcher::{Matcher, Utf32String};
 use ratatui::crossterm::event::KeyEvent;
 use ratatui::layout::Rect;
 use ratatui::widgets::*;
+use serde::Deserialize;
 mod impl_album_song;
 mod impl_artiststate;
 mod impl_library;
@@ -21,7 +22,7 @@ use crate::update::build_library;
 
 type Result<T> = std::result::Result<T, Box<dyn Error>>;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Deserialize)]
 pub enum Screen {
     Library,
     Queue,
@@ -37,7 +38,7 @@ impl From<&String> for Screen {
     }
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Deserialize)]
 pub enum State {
     Searching,
     Running,
@@ -135,7 +136,8 @@ pub struct Model {
 
 impl Model {
     pub fn new(frame_size: Rect) -> Result<Self> {
-        let config = Config::default().try_read_config()?;
+        //let config = Config::default().try_read_config()?;
+        let config = Config::from_toml().unwrap_or_default();
         let mut conn = Self::make_connection(&config);
         let idle_conn = IdleClient::new(
             Self::make_connection(&config),

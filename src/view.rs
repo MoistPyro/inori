@@ -1,12 +1,9 @@
 use std::error::Error;
-use crate::config::deserialize_style;
-use crate::config::ConfigError;
 use crate::model::*;
 use ratatui::prelude::*;
 use ratatui::style::Color::*;
 use ratatui::style::Style;
-use toml::Table;
-use toml::Value;
+use serde::Deserialize;
 mod artist_select_renderer;
 pub mod layout;
 pub mod library_renderer;
@@ -17,25 +14,42 @@ mod track_select_renderer;
 
 type Result<T> = std::result::Result<T, Box<dyn Error>>;
 
-#[derive(Clone, Default)]
+#[derive(Clone, Default, Deserialize)]
 pub struct Theme {
+    #[serde(default)]
     pub block_active: Style,
+    #[serde(default)]
     pub field_album: Style,
+    #[serde(default)]
     pub field_artistsort: Style,
+    #[serde(default)]
     pub item_highlight_active: Style,
+    #[serde(default)]
     pub item_highlight_inactive: Style,
+    #[serde(default)]
     pub progress_bar_filled: Style,
+    #[serde(default)]
     pub progress_bar_unfilled: Style,
+    #[serde(default)]
     pub search_query_active: Style,
+    #[serde(default)]
     pub search_query_inactive: Style,
+    #[serde(default)]
     pub slash_span: Style,
+    #[serde(default)]
     pub status_album: Style,
+    #[serde(default)]
     pub status_artist: Style,
+    #[serde(default)]
     pub status_paused: Style,
+    #[serde(default)]
     pub status_playing: Style,
+    #[serde(default)]
     pub status_stopped: Style,
+    #[serde(default)]
     pub status_title: Style,
 }
+
 impl Theme {
     pub fn new() -> Self {
         Self {
@@ -59,85 +73,6 @@ impl Theme {
             status_stopped: Style::default().fg(Red),
             status_title: Style::default().bold(),
         }
-    }
-
-    pub fn apply_theme(mut self, value: Table) -> Result<Self> {
-        for (key, value) in value {
-            match (key.as_str(), value) {
-                ("item_highlight_active", Value::Table(t)) => {
-                    self.item_highlight_active = deserialize_style(t)?;
-                }
-                ("item_highlight_inactive", Value::Table(t)) => {
-                    self.item_highlight_inactive = deserialize_style(t)?;
-                }
-                ("block_active", Value::Table(t)) => {
-                    self.block_active = deserialize_style(t)?;
-                }
-                ("status_artist", Value::Table(t)) => {
-                    self.status_artist = deserialize_style(t)?;
-                }
-                ("status_album", Value::Table(t)) => {
-                    self.status_album = deserialize_style(t)?;
-                }
-                ("status_title", Value::Table(t)) => {
-                    self.status_title = deserialize_style(t)?;
-                }
-                ("artist_sort", Value::Table(t)) => {
-                    self.field_artistsort = deserialize_style(t)?;
-                }
-                ("field_artistsort", Value::Table(t)) => {
-                    self.field_artistsort = deserialize_style(t)?;
-                }
-                ("album", Value::Table(t)) => {
-                    self.field_album = deserialize_style(t)?;
-                }
-                ("field_album", Value::Table(t)) => {
-                    self.field_album = deserialize_style(t)?;
-                }
-                ("playing", Value::Table(t)) => {
-                    self.status_playing = deserialize_style(t)?;
-                }
-                ("paused", Value::Table(t)) => {
-                    self.status_paused = deserialize_style(t)?;
-                }
-                ("stopped", Value::Table(t)) => {
-                    self.status_stopped = deserialize_style(t)?;
-                }
-                ("status_playing", Value::Table(t)) => {
-                    self.status_playing = deserialize_style(t)?;
-                }
-                ("status_paused", Value::Table(t)) => {
-                    self.status_paused = deserialize_style(t)?;
-                }
-                ("status_stopped", Value::Table(t)) => {
-                    self.status_stopped = deserialize_style(t)?;
-                }
-                ("slash_span", Value::Table(t)) => {
-                    self.slash_span = deserialize_style(t)?;
-                }
-                ("search_query_active", Value::Table(t)) => {
-                    self.search_query_active = deserialize_style(t)?;
-                }
-                ("search_query_inactive", Value::Table(t)) => {
-                    self.search_query_inactive = deserialize_style(t)?;
-                }
-                ("progress_bar_filled", Value::Table(t)) => {
-                    self.progress_bar_filled = deserialize_style(t)?;
-                }
-                ("progress_bar_unfilled", Value::Table(t)) => {
-                    self.progress_bar_unfilled = deserialize_style(t)?;
-                }
-                (other, _) => return Err(Box::new(ConfigError::UnknownThemeOption(other.to_string()))),
-            }
-        }
-        Ok(self)
-    }
-}
-
-impl From<Table> for Theme {
-    fn from(value: Table) -> Self {
-        let table = Self::default();
-        table.apply_theme(value).unwrap()
     }
 }
 

@@ -6,6 +6,7 @@ use bitflags::bitflags;
 use mpd::status::State as PlayState;
 use mpd::Subsystem;
 use ratatui::crossterm::event::{self, KeyCode, KeyEvent};
+use serde::Deserialize;
 use std::option::Option;
 use std::time::Duration;
 
@@ -24,7 +25,7 @@ bitflags! {
     }
 }
 
-#[derive(PartialEq, Eq, Debug, Clone)]
+#[derive(PartialEq, Eq, Debug, Clone, Deserialize)]
 pub enum Vertical {
     Up,
     Down,
@@ -32,25 +33,25 @@ pub enum Vertical {
     Bottom,
 }
 
-#[derive(PartialEq, Eq, Clone, Debug)]
+#[derive(PartialEq, Eq, Clone, Debug, Deserialize)]
 pub enum Horizontal {
     Left,
     Right,
 }
 
-#[derive(PartialEq, Eq, Clone, Debug)]
+#[derive(PartialEq, Eq, Clone, Debug, Deserialize)]
 pub enum Dirs {
     Vert(Vertical),
     Horiz(Horizontal),
 }
 
-#[derive(PartialEq, Eq, Clone, Debug)]
+#[derive(PartialEq, Eq, Clone, Debug, Deserialize)]
 pub enum SearchMsg {
     Start,
     End,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Deserialize)]
 pub enum Toggle {
     Repeat,
     Random,
@@ -58,13 +59,13 @@ pub enum Toggle {
     Consume,
 }
 
-#[derive(PartialEq, Clone, Debug)]
+#[derive(PartialEq, Clone, Debug, Deserialize)]
 pub enum SeekDirection {
     Forward,
     Backward,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Deserialize)]
 pub enum Message {
     Direction(Dirs),
     ScrollScreenful(Vertical),

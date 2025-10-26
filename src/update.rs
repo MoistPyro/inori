@@ -88,7 +88,7 @@ pub enum Message {
 }
 
 pub fn update_tick(model: &mut Model) -> Result<()> {
-    update_screens(model, Update::all())?;
+    update_screens(model, Update::all() - Update::START_PLAYING)?;
     Ok(())
 }
 

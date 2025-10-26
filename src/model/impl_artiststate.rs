@@ -68,7 +68,7 @@ impl<'a> ArtistData {
         // }
         new
     }
-    pub fn selected_item(&self) -> Option<TrackSelItem> {
+    pub fn selected_item(&'_ self) -> Option<TrackSelItem<'_>> {
         let sel_idx = self.selector().selected()?;
         let mut i = 0; // keeps track of index with folding
         let mut full_index = 0; // keeps track of index without considering folding

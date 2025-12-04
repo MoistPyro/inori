@@ -124,6 +124,9 @@ pub fn handle_search_k<T>(
             KeyCode::Backspace => {
                 let _ = s.filter_mut().query.pop();
             }
+            KeyCode::Tab => {
+                return Some(Message::ToggleScreen);
+            }
             KeyCode::Esc => {
                 return Some(Message::LocalSearch(SearchMsg::End));
             }

@@ -87,6 +87,16 @@ pub fn handle_search(model: &mut Model, k: KeyEvent) -> Result<Update> {
             ) {
                 handle_msg(model, m)
             } else {
+                if model
+                    .library
+                    .global_search
+                    .contents
+                    .as_ref()
+                    .is_some_and(|i| !i.is_empty())
+                    && model.library.global_search.selected_item().is_none()
+                {
+                    model.library.global_search.set_selected(Some(0));
+                }
                 if let Some(item) = model.library.global_search.selected_item()
                 {
                     model.jump_to(item.clone());

@@ -1,6 +1,6 @@
 extern crate mpd;
-use std::error::Error;
 use mpd::client::StreamTypes;
+use std::error::Error;
 //use mpd::error::Result;
 use mpd::idle::IdleClient;
 use mpd::{Client, Song, Status, Subsystem};

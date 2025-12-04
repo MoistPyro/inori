@@ -1,6 +1,6 @@
+use crate::event_handler::Result;
 use crate::model::*;
 use crate::view::Theme;
-use crate::event_handler::Result;
 use platform_dirs::AppDirs;
 use ratatui::style::Style;
 use std::error::Error;
@@ -41,11 +41,15 @@ impl Config {
             let toml = contents.parse::<Table>()?; //failed to parse toml
             for (key, value) in toml {
                 match (key.as_str(), value) {
-                    ("keybindings", Value::Table(t)) => self.read_keybinds(t)?,
+                    ("keybindings", Value::Table(t)) => {
+                        self.read_keybinds(t)?
+                    }
                     ("seek_seconds", Value::Integer(k)) if k > 0 => {
                         self.seek_seconds = k
                     }
-                    ("theme", Value::Table(t)) => self.theme = self.theme.apply_theme(t)?,
+                    ("theme", Value::Table(t)) => {
+                        self.theme = self.theme.apply_theme(t)?
+                    }
                     ("dvorak_keybindings", Value::Boolean(true)) => {
                         self.keybindings = self.keybindings.with_dvorak_style();
                     }
@@ -56,20 +60,23 @@ impl Config {
                         self.mpd_address = Some(addr);
                     }
                     ("screens", Value::Array(screens)) => {
-                        let temp_screens: Result<Vec<Screen>> = screens
+                        self.screens = screens
                             .iter()
-                            .map(
-                                |v| match v {
+                            .map(|v| match v {
                                 Value::String(s) => Ok(Screen::from(s)),
-                                x => Err(Box::new(ConfigError::WrongKeyValueType(key.to_owned(), x.to_owned())) as Box<dyn Error>),
-                                })
-                            .collect();
-                        self.screens = match temp_screens {
-                            Ok(s) => s,
-                            Err(e) => return Err(e),
-                        };
+                                x => Err(Box::new(
+                                    ConfigError::WrongKeyValueType(
+                                        key.to_owned(),
+                                        x.to_owned(),
+                                    ),
+                                )
+                                    as Box<dyn Error>),
+                            })
+                            .collect::<Result<Vec<Screen>>>()?;
                     }
-                    ("nucleo_prefer_prefix", Value::Boolean(t)) => self.nucleo_prefer_prefix = t,
+                    ("nucleo_prefer_prefix", Value::Boolean(t)) => {
+                        self.nucleo_prefer_prefix = t
+                    }
                     (_k, _v) => panic!("unknown key {} or value {}", _k, _v),
                 }
             }
@@ -90,12 +97,20 @@ impl Config {
                             let keybinds = keybind::parse_keybind(s).unwrap();
                             self.keybindings.insert(m.clone(), &keybinds);
                         } else {
-                            return Err(Box::new(ConfigError::WrongKeyValueType(key, v)))
+                            return Err(Box::new(
+                                ConfigError::WrongKeyValueType(key, v),
+                            ));
                         }
                     }
                 }
-                (Some(_m), other) => return Err(Box::new(ConfigError::WrongKeyValueType(key, other))),
-                (None, _) => return Err(Box::new(ConfigError::MissingMessage(key))),
+                (Some(_m), other) => {
+                    return Err(Box::new(ConfigError::WrongKeyValueType(
+                        key, other,
+                    )))
+                }
+                (None, _) => {
+                    return Err(Box::new(ConfigError::MissingMessage(key)))
+                }
             }
         }
         Ok(())
@@ -103,11 +118,10 @@ impl Config {
 }
 
 //does not log or throw. it simply ignores 'bad' mods
-fn join_modifier_array(modifiers: &Vec<Value>) -> String {
-    let modifier_strings: Vec<String> = modifiers.iter()
-        .filter_map(|m| m
-            .as_str()
-            .map(|s| s.to_string()))
+fn join_modifier_array(modifiers: &[Value]) -> String {
+    let modifier_strings: Vec<String> = modifiers
+        .iter()
+        .filter_map(|m| m.as_str().map(|s| s.to_string()))
         .collect();
 
     let mod_string: String = modifier_strings.join("|");
@@ -141,10 +155,16 @@ pub enum ConfigError {
 impl Display for ConfigError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            ConfigError::MissingMessage(s) => write!(f, "message {} does not exist", s),
+            ConfigError::MissingMessage(s) => {
+                write!(f, "message {} does not exist", s)
+            }
             //ConfigError::UnknownModifier(s) => write!(f, "Error while parsing theme modifier array: unknown modifier: {}", s),
-            ConfigError::UnknownThemeOption(s) => write!(f, "theme option {} not found", s),
-            ConfigError::WrongKeyValueType(key, s) => write!(f, "keybind {} for command {} has wrong type", s, key),
+            ConfigError::UnknownThemeOption(s) => {
+                write!(f, "theme option {} not found", s)
+            }
+            ConfigError::WrongKeyValueType(key, s) => {
+                write!(f, "keybind {} for command {} has wrong type", s, key)
+            }
         }
     }
 }

@@ -1,10 +1,10 @@
-use std::error::Error;
 use crate::config::deserialize_style;
 use crate::config::ConfigError;
 use crate::model::*;
 use ratatui::prelude::*;
 use ratatui::style::Color::*;
 use ratatui::style::Style;
+use std::error::Error;
 use toml::Table;
 use toml::Value;
 mod artist_select_renderer;
@@ -127,7 +127,11 @@ impl Theme {
                 ("progress_bar_unfilled", Value::Table(t)) => {
                     self.progress_bar_unfilled = deserialize_style(t)?;
                 }
-                (other, _) => return Err(Box::new(ConfigError::UnknownThemeOption(other.to_string()))),
+                (other, _) => {
+                    return Err(Box::new(ConfigError::UnknownThemeOption(
+                        other.to_string(),
+                    )))
+                }
             }
         }
         Ok(self)

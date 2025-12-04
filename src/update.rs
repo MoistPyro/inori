@@ -64,6 +64,7 @@ pub enum SeekDirection {
     Backward,
 }
 
+
 #[derive(Clone, Debug)]
 pub enum Message {
     Direction(Dirs),
@@ -74,6 +75,7 @@ pub enum Message {
     Seek(SeekDirection),
     UpdateDB,
     Select,
+    SelectAndNext,
     SwitchState(State),
     SwitchScreen(usize),
     ToggleScreen,

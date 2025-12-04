@@ -122,6 +122,7 @@ command1 = ["KEYSTR1", "KEYSTR2"]
 | `seek`             | seeks forward by 5 seconds                                           |               |            |            |
 | `seek_backwards`   | seeks backwards by 5 seconds                                         |               |            |            |
 | `select`           | act on the selected entry                                            | `<enter>`     |            |            |
+| `select_and_next`  | act on the selected entry and then move down                         |               |            |            |
 | `quit`             | close the program                                                    | q             |            |            |
 | `screen_1`         | switch to screen 1 (default: library)                                | 1             |            |            |
 | `screen_2`         | switch to screen 2 (default: queue)                                  | 2             |            |            |

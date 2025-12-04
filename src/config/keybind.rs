@@ -28,6 +28,7 @@ pub fn get_message(s: &str) -> Option<Message> {
         "toggle_playpause" => Some(Message::PlayPause),
         "update_db" => Some(Message::UpdateDB),
         "select" => Some(Message::Select),
+        "select_and_next" => Some(Message::SelectAndNext),
         "quit" => Some(Message::SwitchState(State::Done)),
         "screen_1" => Some(Message::SwitchScreen(1)),
         "screen_2" => Some(Message::SwitchScreen(2)),

@@ -155,20 +155,28 @@ pub fn handle_library_artist(
             }
             Ok(Update::empty())
         }
-        Message::Select => {
-            if let Some(artist) = model.library.selected_item() {
-                model.conn.findadd(Query::new().and(
-                    Term::Tag(Borrowed("AlbumArtist")),
-                    artist.name.clone(),
-                ))?;
-            }
-            Ok(Update::STATUS
-                | Update::QUEUE
-                | Update::START_PLAYING
-                | Update::CURRENT_SONG)
+        Message::Select => add_artist(model),
+        Message::SelectAndNext => {
+            let res = add_artist(model);
+            handle_vertical(Vertical::Down, &mut model.library);
+            res
         }
+
         _ => Ok(Update::empty()),
     }
+}
+
+pub fn add_artist(model: &mut Model) -> Result<Update> {
+    if let Some(artist) = model.library.selected_item() {
+        model.conn.findadd(Query::new().and(
+            Term::Tag(Borrowed("AlbumArtist")),
+            artist.name.clone(),
+        ))?;
+    }
+    Ok(Update::STATUS
+        | Update::QUEUE
+        | Update::START_PLAYING
+        | Update::CURRENT_SONG)
 }
 
 pub fn add_item(model: &mut Model) -> Result<Update> {
@@ -215,7 +223,16 @@ pub fn handle_library_track(model: &mut Model, msg: Message) -> Result<Update> {
             model.library.active = ArtistSelector;
             Ok(Update::empty())
         }
-        Message::Select => add_item(model),
+        Message::Select => {
+            add_item(model)
+        },
+        Message::SelectAndNext => {
+            let res = add_item(model);
+            if let Some(art) = model.library.selected_item_mut() {
+                handle_vertical(Vertical::Down, art);
+            }
+            res
+        }
         Message::Fold | Message::Direction(Dirs::Horiz(Horizontal::Right)) => {
             if let Some(art) = model.library.selected_item_mut() {
                 if let Some(album) = art.selected_album_mut() {

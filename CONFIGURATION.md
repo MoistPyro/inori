@@ -107,7 +107,7 @@ command1 = ["KEYSTR1", "KEYSTR2"]
 ### List of commands and defaults
 
 | Command name       | Explanation                                                          | default       | dvorak set | qwerty set |
-| ------------------ | -------------------------------------------------------------------- | ------------- | ---------- | ---------- |
+|--------------------|----------------------------------------------------------------------|---------------|------------|------------|
 | `up`               | move up                                                              | `<up>`, C-p   | t          | k          |
 | `down`             | move down                                                            | `<down>`, C-n | h          | j          |
 | `left`             | move left                                                            | `<left>`      | d          | h          |
@@ -119,8 +119,8 @@ command1 = ["KEYSTR1", "KEYSTR2"]
 | `toggle_playpause` | toggles between play and pause                                       | p             |            |            |
 | `next song`        | jumps to the next song in the queue                                  |               |            |            |
 | `previous song`    | jumps to the previous song in the queue                              |               |            |            |
-| `seek`             | seeks forward by 5 seconds                                           |               |            |            |
-| `seek_backwards`   | seeks backwards by 5 seconds                                         |               |            |            |
+| `seek`             | seeks forward by `seek_seconds` (default: 5) seconds                 |               |            |            |
+| `seek_backwards`   | seeks backwards by `seek_seconds` (default 5) seconds                |               |            |            |
 | `select`           | act on the selected entry                                            | `<enter>`     |            |            |
 | `select_and_next`  | act on the selected entry and then move down                         |               |            |            |
 | `quit`             | close the program                                                    | q             |            |            |

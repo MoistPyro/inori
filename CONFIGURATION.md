@@ -142,6 +142,12 @@ command1 = ["KEYSTR1", "KEYSTR2"]
 Note that the dvorak/qwerty sets _do not_ delete the default
 keybindings.
 
+### Search keybinds
+
+In any search field, `C-n` (down) and `C-p` (up) are always available for
+navigation. In the global search, these are the *only* navigation
+keys. `C-u` can be used to reset any search field without closing it.
+
 ## Theme
 
 Colors should be specified in a table called "theme", like this:

@@ -56,7 +56,6 @@ as a full list of all default keybindings.
 
 ## Todo
 
-- [ ] Playlist interface
 - [ ] Compile feature flag for Japanese album/track title romanization for search using a tokenizer & dictionary
 - [ ] More thorough customization options, especially for behavior & layout tweaks
 - [ ] Spectrum visualizer like ncmpcpp
@@ -64,8 +63,7 @@ as a full list of all default keybindings.
 ## Acknowledgements
 
 - authors of [ratatui](https://ratatui.rs/) and
-  [rust-mpd](https://docs.rs/mpd/latest/mpd/)
+  [rust-mpd](https://docs.rs/mpd/latest/mpd/), base for [inori-mpd](https://github.com/eshrh/inori-mpd) fork
 - [mmtc](https://github.com/figsoda/mmtc) and
-  [rmptui](https://github.com/krolyxon/rmptui), two other rust mpd
-  clients, helped me learn rust
-- [@stephen-huan](https://github.com/stephen-huan): here from day one
+  [rmptui](https://github.com/krolyxon/rmptui), two earlier rust mpd clients
+- [@stephen-huan](https://github.com/stephen-huan): design contribution & nix tooling

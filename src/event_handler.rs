@@ -14,14 +14,14 @@ pub struct EventHandler {
 
 impl EventHandler {
     pub fn new() -> Self {
-        let poll_time = Duration::from_millis(16);
-        let tick_interval = Duration::from_millis(500);
+        const POLL_TIME: Duration = Duration::from_millis(16);
+        const TICK_INTERVAL: Duration = Duration::from_millis(500);
 
         let (tx, rx) = std::sync::mpsc::channel();
         let mut now = Instant::now();
         let mut last_event = Instant::now();
         std::thread::spawn(move || loop {
-            if crossterm::event::poll(poll_time).expect("event poll failed") {
+            if crossterm::event::poll(POLL_TIME).expect("event poll failed") {
                 match crossterm::event::read().expect("event read failed") {
                     crossterm::event::Event::Key(e) => {
                         last_event = Instant::now();
@@ -33,8 +33,8 @@ impl EventHandler {
                 .expect("event send failed")
             }
             // only tick when idle.
-            if now.elapsed() >= tick_interval
-                && (Instant::now() - last_event >= Duration::from_millis(500))
+            let time_since_last_event: Duration = Instant::now() - last_event;
+            if now.elapsed() >= TICK_INTERVAL && time_since_last_event >= TICK_INTERVAL
             {
                 tx.send(Event::Tick).expect("tick send failed");
                 now = Instant::now();
